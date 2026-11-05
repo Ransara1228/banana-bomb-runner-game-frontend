@@ -1,0 +1,111 @@
+/*
+ * Used for: first version of the styles and CSS animations, following the Figma style guide.
+ * Change it, test it and make sure you understand it before submitting.
+ */
+
+/* ---------- 1. Design tokens (same names as the Figma color styles) ---------- */
+:root {
+  --bg: #0E1F17;        /* Jungle night - background */
+  --card: #15301F;      /* Leaf panel - cards */
+  --line: #2E5A40;      /* Moss line - borders */
+  --banana: #FFD23F;    /* Banana - primary */
+  --ink: #2A2100;       /* text on yellow */
+  --red: #FF5A4E;       /* Fuse red - bombs, hearts */
+  --red-text: #FF7A70;  /* red that is easy to read on dark cards */
+  --green: #3DDC84;     /* Defused green - success */
+  --sand: #C9A26B;      /* Path sand */
+  --text: #F4F1E8;      /* Cream - text */
+  --muted: #A9BFB2;     /* Fog - muted text */
+  --head: 'Fredoka', system-ui, sans-serif;
+  --body: 'Inter', system-ui, sans-serif;
+  --r-lg: 28px;
+  --r-md: 18px;
+  --r-sm: 14px;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { min-height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 16px; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; font-family: var(--head); font-weight: 700; line-height: 1.05; }
+h1 { font-size: 40px; }
+h2 { font-size: 32px; font-weight: 600; }
+h3 { font-size: 22px; font-weight: 600; }
+p { margin: 0; line-height: 1.5; }
+img { max-width: 100%; }
+button, input { font: inherit; color: inherit; }
+
+/* ---------- 2. Small helpers ---------- */
+.screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; color: var(--muted); }
+.page { min-height: 100vh; padding: 24px clamp(16px, 4vw, 56px) 40px; display: flex; flex-direction: column; gap: 24px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.danger { color: var(--red-text); }
+.y { color: var(--banana); }
+.num { font-family: var(--head); font-weight: 700; font-variant-numeric: tabular-nums; }
+.num.big { font-size: 34px; line-height: 1.1; color: var(--banana); }
+.num.huge { font-size: 72px; line-height: 1; color: var(--banana); }
+.label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; color: var(--muted); }
+.msg { color: var(--banana); font-weight: 500; }
+.row { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.row.center { justify-content: center; }
+.row-tight { display: flex; gap: 10px; align-items: center; }
+.center { text-align: center; justify-content: center; align-items: center; }
+.col { display: flex; flex-direction: column; gap: 14px; }
+.grow { flex: 1 1 0; }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 13px; color: var(--muted); white-space: nowrap; }
+.chip.dark { background: var(--bg); border-color: transparent; color: var(--text); }
+.chip.dark.danger { color: var(--red-text); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { display: inline-block; padding: 4px 10px; border-radius: 999px; color: #08221A; font-size: 12px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tiles.one { grid-template-columns: 1fr; width: 100%; }
+.tiles.four { grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; }
+.tile { background: var(--bg); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.tile > span { font-size: 13px; color: var(--muted); }
+.tile > b { font-family: var(--head); font-weight: 600; font-size: 28px; }
+.tile > b.y { color: var(--banana); font-weight: 700; }
+
+/* ---------- 3. Buttons and inputs ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: var(--r-sm); border: 1px solid var(--line); background: transparent; color: var(--text); font-family: var(--head); font-weight: 600; font-size: 17px; cursor: pointer; transition: transform .1s, background .15s, border-color .15s; text-decoration: none; }
+.btn:hover:not(:disabled) { border-color: var(--muted); filter: brightness(1.08); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.primary { background: var(--banana); color: var(--ink); border-color: var(--banana); font-weight: 700; }
+.btn.primary:hover:not(:disabled) { background: #FFE27A; border-color: #FFE27A; }
+.btn.big { min-height: 58px; border-radius: var(--r-md); font-size: 20px; padding: 0 24px; }
+.btn.wide { width: 100%; }
+.btn:focus-visible, .icon-btn:focus-visible, .key:focus-visible, .key-btn:focus-visible, .node:focus-visible, .link:focus-visible { outline: 3px solid var(--banana); outline-offset: 3px; }
+
+.link { background: none; border: 0; padding: 4px; color: var(--banana); font-weight: 600; cursor: pointer; }
+.link:hover { text-decoration: underline; }
+
+.icon-btn { width: 46px; height: 46px; flex-shrink: 0; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 19px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: transform .1s; }
+.icon-btn:hover:not(:disabled) { border-color: var(--muted); filter: brightness(1.15); }
+.icon-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+label { display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 500; }
+input { height: 52px; width: 100%; padding: 0 16px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 16px; outline: none; transition: border-color .15s; }
+input:focus { border: 2px solid var(--banana); padding: 0 15px; }
+
+.user-pill { display: inline-flex; align-items: center; gap: 10px; padding: 5px 16px 5px 5px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-size: 15px; font-weight: 500; white-space: nowrap; }
+.avatar { border-radius: 50%; background: var(--text); flex-shrink: 0; }
+.avatar.fallback { display: inline-flex; align-items: center; justify-content: center; background: var(--banana); color: var(--ink); font-family: var(--head); font-weight: 600; }
+
+/* ---------- 4. Animations ---------- */
+@keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+@keyframes pulse-ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
+@keyframes drop { 0% { transform: translateY(-30px) scale(.4); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(150px) scale(1.15); opacity: 0; } }
+@keyframes star { 0% { opacity: 0; transform: scale(0) rotate(-40deg); } 70% { opacity: 1; transform: scale(1.25) rotate(8deg); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes heart-lost { 0% { transform: scale(1.5); } 100% { transform: scale(1); } }
+.pop { animation: pop .45s ease-out both; }
+.shake { animation: shake .5s ease-in-out; }
+.bob { animation: bob 1.4s ease-in-out infinite; }
+.drop { animation: drop 2.4s ease-in infinite; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
