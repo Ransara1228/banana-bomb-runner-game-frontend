@@ -105,6 +105,38 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .drop { animation: drop 2.4s ease-in infinite; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
+/* ---------- 6. Login and OTP ---------- */
+.auth-page { min-height: 100vh; padding: 48px clamp(16px, 5vw, 80px); display: grid; grid-template-columns: minmax(0, 1fr) 470px; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.brand-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand-row img { width: 40px; height: 40px; }
+.brand-name { font-family: var(--head); font-weight: 700; font-size: 20px; letter-spacing: 2px; color: var(--banana); }
+.display { font-size: clamp(48px, 6vw, 78px); line-height: 1; animation: pop .6s ease-out both; }
+.lead { font-size: 19px; color: var(--muted); max-width: 600px; }
+.preview { position: relative; width: 100%; max-width: 700px; aspect-ratio: 7 / 4; max-height: 46vh; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
+.preview-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.preview-runner { position: absolute; left: 50%; bottom: 4%; width: 13%; margin-left: -6.5%; }
+.preview-bomb { position: absolute; left: 66%; top: 34%; width: 9%; }
+.preview .pill { position: absolute; left: 20px; top: 20px; padding: 6px 12px; font-size: 13px; }
+.mini-hearts { position: absolute; left: 112px; top: 20px; padding: 4px 12px; border-radius: 999px; background: var(--bg); color: var(--red); font-size: 15px; letter-spacing: 2px; }
+.preview .right { position: absolute; right: 20px; top: 20px; color: var(--muted); }
+.preview .right b { color: var(--text); }
+.credit { font-size: 13px; color: var(--muted); }
+
+.auth-card { padding: 44px; gap: 20px; animation-delay: .15s; }
+.auth-card h2 { font-size: 36px; }
+.steps { display: flex; gap: 8px; }
+.step { flex: 1; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line); font-size: 13px; color: var(--muted); text-align: center; }
+.step.on { border-color: var(--banana); color: var(--banana); font-weight: 600; }
+.step.done { border-color: var(--green); color: var(--green); }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.pw { position: relative; display: block; }
+.pw input { padding-right: 52px; }
+.eye { position: absolute; right: 6px; top: 6px; width: 40px; height: 40px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; font-size: 18px; }
+.switch { text-align: center; color: var(--muted); font-size: 15px; }
+.note { border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; color: var(--muted); }
+
+
 /* ---------- 12. Modern, playful look (animated background, chunky buttons, glow) ---------- */
 @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(6vmax, 4vmax) scale(1.15); } }
 @keyframes floaty { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(calc(-100vh - 160px)) rotate(360deg); } }
@@ -179,6 +211,67 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .done-card { box-shadow: 0 0 70px rgba(255, 210, 63, .22), 0 30px 80px rgba(0, 0, 0, .45); }
 .gate { box-shadow: 0 0 0 6px rgba(255, 210, 63, .08), 0 30px 80px rgba(0, 0, 0, .5); }
 .gate-icon { animation: beat 1.4s ease-in-out infinite; }
+
+/* ---------- 14. Login card: glowing border, corner mascots, log in / sign up switch ---------- */
+@property --spin { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes border-spin { to { --spin: 360deg; } }
+@keyframes spark { 0%, 100% { transform: scale(.6); opacity: .6; } 50% { transform: scale(1.4); opacity: 1; } }
+@keyframes ping { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(1.8); opacity: 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.login-card { overflow: visible; gap: 18px; padding-top: 48px; }
+.login-card::before { content: ''; position: absolute; inset: -2px; border-radius: inherit; padding: 2px; pointer-events: none;
+  background: conic-gradient(from var(--spin), #FFD23F, #3DDC84, #4FA8FF, #B48CFF, #FF7AB6, #FFD23F);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: border-spin 6s linear infinite; opacity: .85; }
+.corner-banana { position: absolute; left: -26px; top: -34px; width: 70px; transform: rotate(-24deg); filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .35)); animation: float-y 2.6s ease-in-out infinite; }
+.corner-bomb { position: absolute; right: -18px; top: -30px; width: 62px; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .35)); animation: wobble 2.2s ease-in-out infinite; }
+.corner-bomb img { display: block; width: 100%; }
+.corner-bomb .spark { position: absolute; right: 4px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle, #FFF6C8 0%, #FFD23F 45%, #FF8A3D 75%, transparent 76%); box-shadow: 0 0 14px #FFB13B; animation: spark .35s ease-in-out infinite; }
+
+.mode-switch { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 16px; background: var(--bg); border: 1px solid var(--line); }
+.mode-switch button { position: relative; z-index: 1; height: 42px; border: 0; background: none; border-radius: 12px; color: var(--muted); font-family: var(--head); font-weight: 600; font-size: 16px; cursor: pointer; transition: color .25s; }
+.mode-switch button.on { color: var(--ink); }
+.mode-switch button:focus-visible { outline: 3px solid var(--banana); outline-offset: 2px; }
+.mode-pill { position: absolute; left: 4px; top: 4px; bottom: 4px; width: calc(50% - 4px); border-radius: 12px; background: linear-gradient(180deg, #FFE27A, #FFD23F 55%, #F4BD16); box-shadow: 0 3px 0 #B88A00; transition: transform .35s cubic-bezier(.3, 1.4, .5, 1); }
+
+.card-title { display: flex; flex-direction: column; gap: 6px; animation: fade-up .35s ease-out both; }
+.card-title h2 { font-size: 34px; }
+.center-text { text-align: center; }
+
+.input-icon { position: relative; display: block; }
+.input-icon > svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; transition: color .2s; }
+.input-icon:focus-within > svg { color: var(--banana); }
+.input-icon input { padding-left: 46px; }
+.input-icon input:focus { padding-left: 45px; }
+.input-icon input::placeholder { color: #6F8A7C; }
+.input-icon.pw input { padding-right: 52px; }
+
+.avatar-preview { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 16px; background: var(--bg); border: 1px dashed var(--line); animation: fade-up .35s ease-out both; }
+.avatar-preview b { display: block; font-family: var(--head); font-size: 18px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar-preview span { font-size: 13px; color: var(--muted); }
+.avatar-pop { display: inline-flex; border-radius: 50%; box-shadow: 0 0 0 3px var(--banana); animation: bump .4s ease-out; }
+
+.strength { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; font-weight: 600; }
+.strength img { width: 22px; height: 22px; opacity: .25; filter: grayscale(1); transition: opacity .2s, filter .2s; }
+.strength img.on { opacity: 1; filter: none; animation: bump .3s ease-out; }
+.strength span { margin-left: 4px; }
+.strength.s1 span { color: var(--red-text); }
+.strength.s2 span { color: var(--banana); }
+.strength.s3 span { color: var(--green); }
+
+.login-card .note { display: flex; align-items: center; gap: 8px; }
+.login-card .note svg { flex-shrink: 0; color: var(--green); }
+
+.mail-badge { position: relative; align-self: center; width: 76px; height: 76px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; background: linear-gradient(135deg, #6B3FE6, #B48CFF); box-shadow: 0 8px 24px rgba(107, 63, 230, .45); animation: float-y 2.4s ease-in-out infinite; }
+.mail-badge::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 3px solid #B48CFF; animation: ping 1.6s ease-out infinite; }
+
+@media (max-width: 720px) {
+  .corner-banana { left: -8px; width: 54px; }
+  .corner-bomb { right: -6px; width: 50px; }
+  .card-title h2 { font-size: 28px; }
+}
 
 /* ---------- 15. Title screen (login + OTP): the game plays itself behind a big logo ---------- */
 @keyframes drop-in { from { transform: translateY(-1.3em) scale(.5); opacity: 0; } to { transform: none; opacity: 1; } }

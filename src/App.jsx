@@ -1,7 +1,19 @@
 /*
+ * AI-assisted: Claude (Anthropic), 2026-11-04.
  * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
  */
-// First screen while the game is being built.
+import { useEffect, useState } from 'react';
+import { api } from './api';
+import Login from './screens/Login';
+
 export default function App() {
-  return <div className="screen">Banana Bomb Runner</div>;
+  const [screen, setScreen] = useState('loading');   // loading -> login -> home
+
+  useEffect(() => {
+    api.progress().then(() => setScreen('home')).catch(() => setScreen('login'));   // already logged in?
+  }, []);
+
+  if (screen === 'loading') return <div className="screen">Loading...</div>;
+  if (screen === 'login') return <Login onLoggedIn={() => setScreen('home')} />;
+  return <div className="screen">Logged in. The level map comes next.</div>;
 }
