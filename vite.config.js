@@ -1,6 +1,3 @@
-/*
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
- */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 

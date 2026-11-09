@@ -1,7 +1,3 @@
-/*
- * AI-assisted: Claude (Anthropic), 2026-11-04.
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
- */
 // Small line icons from the Figma style guide (sound, pause, play, fullscreen, close, mail, lock, user, shield).
 const PATHS = {
   soundOn: <><path d="M4 9h4l5-4v14l-5-4H4z" /><path d="M16 9a4 4 0 0 1 0 6" /><path d="M18.5 6.5a8 8 0 0 1 0 11" /></>,

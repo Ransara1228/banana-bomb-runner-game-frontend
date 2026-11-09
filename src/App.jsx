@@ -1,7 +1,3 @@
-/*
- * AI-assisted: Claude (Anthropic), 2026-11-04.
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
- */
 import { useEffect, useState } from 'react';
 import { api } from './api';
 import Login from './screens/Login';

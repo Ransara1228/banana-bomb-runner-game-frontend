@@ -1,7 +1,3 @@
-/*
- * AI-assisted: Claude (Anthropic), 2026-11-04.
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
- */
 // Sounds with Howler.js (it uses the browser's Web Audio API underneath).
 // The files are in public/sounds, so the game does not need the internet for sound.
 import { Howl, Howler } from 'howler';

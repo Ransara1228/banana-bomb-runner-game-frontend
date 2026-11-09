@@ -1,7 +1,3 @@
-/*
- * AI-assisted: Claude (Anthropic), 2026-11-04.
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
- */
 // Small helpers for browser Web APIs. Each one checks the browser supports it first.
 
 /** Vibration API: phones only (not every browser has it, e.g. iOS Safari). */
