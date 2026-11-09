@@ -1,6 +1,5 @@
 /*
- * AI-assisted: Claude (Anthropic), 2026-11-04.
- * Used for: first version of this file. Change it, test it and make sure you understand it before submitting.
+ * AI-assisted: Claude (Anthropic), 2026-11-09.
  */
 // All calls to the Spring Boot backend (Interoperability: REST + JSON). The JWT cookie is sent automatically.
 async function call(method, url, body) {
