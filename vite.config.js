@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     // every /api call goes to Spring Boot, so the browser sees one site (no CORS, the cookie works)
-    proxy: { '/api': 'http://localhost:8080' },
+    proxy: { '/api': 'http://localhost:8078' },
   },
 });
