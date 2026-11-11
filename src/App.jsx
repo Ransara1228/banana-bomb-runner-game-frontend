@@ -5,6 +5,7 @@ import { enterFullscreen } from './browser';
 import Login from './screens/Login';
 import Home from './screens/Home';
 import Game from './screens/Game';
+import Leaderboard from './screens/Leaderboard';
 
 export default function App() {
   const [screen, setScreen] = useState('loading');   // loading -> login -> home -> game / leaderboard
@@ -29,14 +30,7 @@ export default function App() {
   if (screen === 'home') {
     return <Home onPlay={play} onLogout={() => setScreen('login')} onLeaderboard={() => setScreen('leaderboard')} />;
   }
-  if (screen === 'leaderboard') {
-    return (
-      <div className="screen">
-        The leaderboard comes next.
-        <button className="btn" onClick={() => setScreen('home')}>Back</button>
-      </div>
-    );
-  }
+  if (screen === 'leaderboard') return <Leaderboard onBack={() => setScreen('home')} onPlay={play} />;
   return <Game key={run} levelNo={level} onPlay={play} onExit={() => setScreen('home')}
                onLeaderboard={() => setScreen('leaderboard')} />;
 }
