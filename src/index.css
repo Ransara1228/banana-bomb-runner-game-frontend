@@ -316,6 +316,42 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .rules .bad, .result.bad { color: var(--red-text); }
 .result { font-family: var(--head); font-size: 24px; font-weight: 700; animation: pop .3s ease-out both; }
 
+/* ---------- 11. Smaller screens ---------- */
+@media (max-width: 1100px) {
+  .auth-page { grid-template-columns: 1fr; }
+  .preview { display: none; }
+  .home-grid, .board-grid, .over-grid { grid-template-columns: 1fr; }
+  .level-hud { width: 240px; }
+  .tiles.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  h1 { font-size: 30px; }
+  .panel { padding: 20px; border-radius: 22px; }
+  .auth-card { padding: 24px; }
+  .map { height: 420px; }
+  .node { width: 110px; }
+  .node-circle { width: 60px; height: 60px; font-size: 26px; }
+  .node-sub { display: none; }
+  .lb-head, .lb-row { grid-template-columns: 44px minmax(0, 1fr) 44px 80px; padding: 0 10px; font-size: 15px; }
+  .hud-top { left: 10px; right: 10px; top: 10px; gap: 8px; }
+  .hud-card { padding: 8px 12px; }
+  .level-hud { width: 100%; order: -1; }
+  .num.big { font-size: 24px; }
+  .hud-hearts { padding: 6px 14px; }
+  .heart { font-size: 22px; }
+  .hud-right .user-pill { display: none; }
+  .hud-right .icon-btn { width: 42px; height: 42px; }
+  .hud-bottom { left: 10px; right: 10px; bottom: 10px; }
+  .lane-hint span, .speed-chip { display: none; }
+  .bomb-ahead { bottom: 150px; }
+  .gate-body, .gate-input { grid-template-columns: 1fr; }
+  .gate-title { font-size: 32px; }
+  .done-card { padding: 24px; }
+  .done-card .row { flex-wrap: wrap; }
+  .boom-title { font-size: 40px; }
+  .num.huge { font-size: 52px; }
+}
+
 /* ---------- 12. Modern, playful look (animated background, chunky buttons, glow) ---------- */
 @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(6vmax, 4vmax) scale(1.15); } }
 @keyframes floaty { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(calc(-100vh - 160px)) rotate(360deg); } }
@@ -652,3 +688,72 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .howto.floating { left: auto; right: 20px; }
 .world .node.sel, .world .node.nudge { z-index: 2; }
 .world .node.nudge { z-index: 4; }
+
+/* ---------- 17. Leaderboard: award stage, medals, fireworks, player card, race tracks ---------- */
+@keyframes burst { 0% { transform: rotate(var(--r)) translateY(0) scale(1); opacity: 0; } 4% { opacity: 1; } 30% { transform: rotate(var(--r)) translateY(-70px) scale(.9); opacity: 1; } 48% { transform: rotate(var(--r)) translateY(-84px) scale(.3); opacity: 0; } 100% { transform: rotate(var(--r)) translateY(-84px); opacity: 0; } }
+@keyframes curtain-sway { 0%, 100% { transform: skewX(0deg); } 50% { transform: skewX(1.6deg); } }
+@keyframes card-shine { 0% { transform: translateX(-60%) rotate(8deg); } 100% { transform: translateX(60%) rotate(8deg); } }
+@keyframes run-in { from { left: 0; } }
+@keyframes trophy-bounce { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-5px) rotate(6deg); } }
+
+.stage { padding-top: 34px; }
+.curtain { position: absolute; top: 0; bottom: 0; width: 54px; z-index: 1; pointer-events: none; transform-origin: top;
+  background: repeating-linear-gradient(90deg, #7E1426 0 12px, #A51D33 12px 22px, #8E1A2C 22px 30px); box-shadow: inset -8px 0 14px rgba(0, 0, 0, .35); animation: curtain-sway 5s ease-in-out infinite; }
+.curtain.left { left: 0; border-radius: 0 0 40px 0; }
+.curtain.right { right: 0; border-radius: 0 0 0 40px; transform: scaleX(-1); animation-direction: reverse; }
+.valance { position: absolute; left: 0; right: 0; top: 0; height: 26px; z-index: 2; pointer-events: none;
+  background: radial-gradient(circle at 18px -4px, #A51D33 19px, transparent 20px) 0 0 / 36px 26px repeat-x, linear-gradient(#7E1426, #7E1426) 0 0 / 100% 8px no-repeat;
+  filter: drop-shadow(0 3px 0 #E0A800); }
+.stage > .podium, .stage > .stats-strip, .stage > .stage-head { position: relative; z-index: 3; }
+.stage .stats-strip { margin: 0 36px; }
+
+.fireworks { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.burst { position: absolute; width: 0; height: 0; }
+.burst i { position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); opacity: 0; animation: burst 4.2s ease-out infinite; animation-delay: inherit; }
+
+.stage-head { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.ribbon { position: relative; margin: 0; padding: 10px 46px; font-size: clamp(28px, 3vw, 40px); color: #fff; text-shadow: 0 3px 0 rgba(90, 10, 6, .55);
+  background: linear-gradient(180deg, #FF6B5E, #D8392F); clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 50%, 100% 100%, 0 100%, 20px 50%);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35)); }
+.trophy { display: inline-block; animation: trophy-bounce 2s ease-in-out infinite; }
+
+.podium { margin-top: 26px; }
+.ptitle { font-size: 12px; color: var(--muted); margin-top: -4px; }
+.podium-col.me .ptitle { color: var(--banana); }
+.podium-block { display: flex; justify-content: center; align-items: flex-start; padding-top: 6px; }
+.podium-block .medal { position: relative; z-index: 1; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .3)); animation: bob 2.2s ease-in-out infinite; }
+.p2 .podium-block .medal { animation-delay: -.7s; }
+.p3 .podium-block .medal { animation-delay: -1.4s; }
+
+.player-card { position: sticky; top: 24px; overflow: hidden; border: 2px solid transparent;
+  background: linear-gradient(180deg, #1C3F29, #15301F) padding-box, conic-gradient(from var(--spin), #FFD23F, #FF7AB6, #B48CFF, #4FA8FF, #3DDC84, #FFD23F) border-box;
+  animation: pop .45s ease-out both, border-spin 6s linear infinite; }
+.card-shine { position: absolute; inset: -50%; pointer-events: none; background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, .07) 47%, rgba(180, 140, 255, .12) 50%, rgba(255, 210, 63, .1) 53%, transparent 58%); animation: card-shine 5s ease-in-out infinite alternate; }
+.player-card > :not(.card-shine) { position: relative; }
+.title-badge { padding: 5px 14px; border-radius: 999px; background: rgba(180, 140, 255, .16); border: 1px solid rgba(180, 140, 255, .5); color: #E3D4FF; font-size: 14px; font-weight: 600; }
+.card-stats { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.card-stats div { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border-radius: 14px; background: var(--bg); }
+.card-stats b { font-size: 22px; }
+.card-stats span { font-size: 12px; color: var(--muted); }
+
+.board-head h2 { font-size: 26px; }
+.race { position: relative; display: block; height: 18px; margin-left: 46px; }
+.race-track { position: absolute; left: 0; right: 14px; top: 6px; height: 7px; border-radius: 4px; overflow: hidden;
+  background: repeating-linear-gradient(90deg, #3B3222 0 10px, #463B28 10px 20px); }
+.race-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: linear-gradient(90deg, #3DDC84, #FFD23F); transform-origin: left; animation: grow-w 1.3s ease-out both; }
+.race-runner { position: absolute; left: calc(var(--to) - 14px); top: -8px; width: 18px; animation: run-in 1.3s ease-out both; }
+.race-runner img { display: block; width: 18px; animation: bob .35s ease-in-out infinite; }
+.race-flag { position: absolute; right: -4px; top: -3px; font-size: 14px; line-height: 1; }
+.lb-row.me .race-track { background: repeating-linear-gradient(90deg, rgba(42, 33, 0, .25) 0 10px, rgba(42, 33, 0, .15) 10px 20px); }
+.lb-row.me .race-fill { background: var(--ink); }
+
+@media (max-width: 1100px) { .player-card { position: static; } }
+@media (max-width: 720px) {
+  .curtain { width: 26px; }
+  .stage .stats-strip { margin: 0; }
+  .race { margin-left: 0; }
+  .ribbon { padding: 8px 30px; }
+}
+/* keep the stage decorations out of the page flow (an older .stage rule made them relative) */
+.stage > .curtain, .stage > .valance, .stage > .fireworks { position: absolute; }
+.stage > .podium { margin-top: 64px; }
