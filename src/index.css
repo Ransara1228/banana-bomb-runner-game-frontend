@@ -316,6 +316,42 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .rules .bad, .result.bad { color: var(--red-text); }
 .result { font-family: var(--head); font-size: 24px; font-weight: 700; animation: pop .3s ease-out both; }
 
+/* ---------- 11. Smaller screens ---------- */
+@media (max-width: 1100px) {
+  .auth-page { grid-template-columns: 1fr; }
+  .preview { display: none; }
+  .home-grid, .board-grid, .over-grid { grid-template-columns: 1fr; }
+  .level-hud { width: 240px; }
+  .tiles.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  h1 { font-size: 30px; }
+  .panel { padding: 20px; border-radius: 22px; }
+  .auth-card { padding: 24px; }
+  .map { height: 420px; }
+  .node { width: 110px; }
+  .node-circle { width: 60px; height: 60px; font-size: 26px; }
+  .node-sub { display: none; }
+  .lb-head, .lb-row { grid-template-columns: 44px minmax(0, 1fr) 44px 80px; padding: 0 10px; font-size: 15px; }
+  .hud-top { left: 10px; right: 10px; top: 10px; gap: 8px; }
+  .hud-card { padding: 8px 12px; }
+  .level-hud { width: 100%; order: -1; }
+  .num.big { font-size: 24px; }
+  .hud-hearts { padding: 6px 14px; }
+  .heart { font-size: 22px; }
+  .hud-right .user-pill { display: none; }
+  .hud-right .icon-btn { width: 42px; height: 42px; }
+  .hud-bottom { left: 10px; right: 10px; bottom: 10px; }
+  .lane-hint span, .speed-chip { display: none; }
+  .bomb-ahead { bottom: 150px; }
+  .gate-body, .gate-input { grid-template-columns: 1fr; }
+  .gate-title { font-size: 32px; }
+  .done-card { padding: 24px; }
+  .done-card .row { flex-wrap: wrap; }
+  .boom-title { font-size: 40px; }
+  .num.huge { font-size: 52px; }
+}
+
 /* ---------- 12. Modern, playful look (animated background, chunky buttons, glow) ---------- */
 @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(6vmax, 4vmax) scale(1.15); } }
 @keyframes floaty { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(calc(-100vh - 160px)) rotate(360deg); } }
