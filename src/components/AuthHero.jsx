@@ -10,7 +10,7 @@ function Letters({ word, from, red }) {
   ));
 }
 
-// Title screen for the login screen, like a real game:
+// Title screen for the login and OTP screens, like a real game:
 // the game plays itself in the background, with the logo and a PLAY button on top.
 // After PLAY, the login card (children) is shown in the middle.
 export default function AuthHero({ started, onStart, children }) {

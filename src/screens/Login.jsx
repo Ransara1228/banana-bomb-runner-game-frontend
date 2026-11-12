@@ -21,7 +21,7 @@ function strength(pw) {
   return { level: 3, text: 'Strong' };
 }
 
-export default function Login({ onLoggedIn }) {
+export default function Login({ onCodeSent }) {
   const [mode, setMode] = useState('login');   // 'login' or 'register'
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -60,7 +60,7 @@ export default function Login({ onLoggedIn }) {
         setMsg('Registered. Now log in.');
       } else {
         await api.login(email, password);   // 5 wrong passwords -> locked for 5 minutes (429)
-        onLoggedIn();
+        onCodeSent(email);
       }
     } catch (err) {
       setMsg(err.message);
@@ -86,7 +86,7 @@ export default function Login({ onLoggedIn }) {
         <div className="card-title" key={mode}>
           <h2>{register ? 'Join the run!' : 'Welcome back, runner!'}</h2>
           <p className="muted">
-            {register ? 'Make your runner. Your name and avatar go on the leaderboard.' : 'Log in with your email and password.'}
+            {register ? 'Make your runner. Your name and avatar go on the leaderboard.' : 'Log in, then type the 6-digit code we email you.'}
           </p>
         </div>
 
@@ -140,7 +140,7 @@ export default function Login({ onLoggedIn }) {
         </button>
         {msg && <p className="msg" role="status">{msg}</p>}
 
-        <p className="note"><Icon name="shield" size={18} /> Safe login: 5 wrong passwords lock the account for 5 minutes.</p>
+        <p className="note"><Icon name="shield" size={18} /> Safe 2-step login: your password, then a one-time code in your email.</p>
       </form>
     </AuthHero>
   );
