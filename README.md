@@ -15,6 +15,9 @@ React 18 + Vite web game for CIS046-3 Software For Enterprise. It talks to the S
    npm run dev
    ```
 3. Open <http://localhost:5173>.
+4. Sign up, then log in with your email and password. A 6-digit code comes to your email
+   (it works for 5 minutes); type it on the next screen. This needs backend 2.0.0 or later
+   with the email settings filled in.
 
 If the backend runs on another port (for example `SERVER_PORT=8078`), change the proxy in `vite.config.js`
 to the same port.
@@ -32,8 +35,9 @@ to the same port.
 
 | Part | File |
 |---|---|
-| Screens | `src/screens/` (Login, Home, Game, GatePuzzle, Leaderboard) |
+| Screens | `src/screens/` (Login, Otp, Home, Game, GatePuzzle, Leaderboard) |
 | REST calls | `src/api.js` |
+| 2-step login (6-digit email code) | `src/screens/Otp.jsx` |
 | Event bus (observer) | `src/events.js` — events: `bananaCollected`, `mysteryCollected`, `bombHit`, `finishReached`, `gateSolved`, `gateFailed`, `levelFailed`, `tick` |
 | Listeners: sound, vibration, confetti | `src/effects.js` |
 | Sounds (Howler.js) | `src/sfx.js`, files in `public/sounds` |

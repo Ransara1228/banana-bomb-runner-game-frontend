@@ -142,6 +142,11 @@ input:focus { border: 2px solid var(--banana); padding: 0 15px; }
 .switch { text-align: center; color: var(--muted); font-size: 15px; }
 .note { border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; color: var(--muted); }
 
+.otp-boxes { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; cursor: text; }
+.otp-box { height: 64px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; font-family: var(--head); font-weight: 600; font-size: 30px; }
+.otp-box.filled { border-color: var(--muted); }
+.otp-box.focus { border: 2px solid var(--banana); }
+.otp-input { position: absolute; inset: 0; height: 100%; opacity: 0; cursor: text; }
 
 /* ---------- 7. Home: level map ---------- */
 .home-grid { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 24px; align-items: start; }
