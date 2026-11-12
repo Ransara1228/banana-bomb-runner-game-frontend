@@ -21,6 +21,7 @@ async function call(method, url, body) {
 export const api = {
   register: (email, username, password) => call('POST', '/api/auth/register', { email, username, password }),
   login: (email, password) => call('POST', '/api/auth/login', { email, password }),
+  verifyOtp: (email, code) => call('POST', '/api/auth/verify-otp', { email, code }),
   logout: () => call('POST', '/api/auth/logout'),
   levels: () => call('GET', '/api/levels'),
   progress: () => call('GET', '/api/progress'),
