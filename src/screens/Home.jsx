@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
-import { COLOR, DESC, MYSTERY_BONUS, bombRows, mysteryBoxes } from '../levels';
+import { COLOR, DESC, GUEST, MYSTERY_BONUS, bombRows, mysteryBoxes, openUpTo } from '../levels';
 import AppHeader from '../components/AppHeader';
 import BgFx from '../components/BgFx';
 import CountUp from '../components/CountUp';
 import WorldMap from '../components/WorldMap';
 
-export default function Home({ onPlay, onLogout, onLeaderboard }) {
+// guest = playing without an account: only levels 1-2, nothing is saved.
+export default function Home({ guest, onPlay, onLogout, onLogin, onLeaderboard }) {
   const [levels, setLevels] = useState([]);
   const [me, setMe] = useState(null);
   const [sel, setSel] = useState(1);
 
   useEffect(() => {
+    if (guest) {                                        // a guest has no progress on the server
+      api.levels().then((l) => { setLevels(l); setMe(GUEST); }).catch(onLogin);
+      return;
+    }
     Promise.all([api.levels(), api.progress()])
       .then(([l, p]) => { setLevels(l); setMe(p); setSel(Math.min(p.highestLevel, l.length)); })
       .catch(onLogout);   // cookie expired -> back to login
@@ -23,7 +28,7 @@ export default function Home({ onPlay, onLogout, onLeaderboard }) {
     const onKey = (e) => {
       const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
       if (typing) return;
-      if (e.key === 'ArrowRight') setSel((s) => Math.min(s + 1, me.highestLevel));
+      if (e.key === 'ArrowRight') setSel((s) => Math.min(s + 1, openUpTo(me.highestLevel)));
       if (e.key === 'ArrowLeft') setSel((s) => Math.max(s - 1, 1));
       if (e.key === 'Enter' && (document.activeElement === document.body || document.activeElement?.classList.contains('node'))) {
         e.preventDefault();
@@ -41,11 +46,16 @@ export default function Home({ onPlay, onLogout, onLeaderboard }) {
 
   if (!me || levels.length === 0) return <div className="screen">Loading...</div>;
   const lv = levels[sel - 1];
-  const nextLocked = levels[me.highestLevel];             // the first locked level (undefined when all are open)
+  const openTo = openUpTo(me.highestLevel);              // levels 1-2 are free, the rest open at the gate
+  const nextLocked = levels[openTo];                      // the first locked level (undefined when all are open)
   return (
     <div className="page">
       <BgFx />
-      <AppHeader me={me}><button className="btn ghost" onClick={logout}>Log out</button></AppHeader>
+      <AppHeader me={me}>
+        {guest
+          ? <button className="btn primary" onClick={onLogin}>Log in</button>
+          : <button className="btn ghost" onClick={logout}>Log out</button>}
+      </AppHeader>
       <main className="home-grid">
         <section className="panel map-panel">
           <WorldMap levels={levels} highest={me.highestLevel} selected={sel} me={me} onSelect={setSel} onPlay={onPlay} />
@@ -84,17 +94,23 @@ export default function Home({ onPlay, onLogout, onLeaderboard }) {
 
           <section className="panel stats-card">
             <h3>Your journey</h3>
-            <div className="journey" aria-label={`${me.highestLevel} of ${levels.length} levels unlocked`}>
+            <div className="journey" aria-label={`${openTo} of ${levels.length} levels open`}>
               {levels.map((l) => (
-                <span key={l.id} className={l.id <= me.highestLevel ? 'pip on' : 'pip'} style={{ '--c': COLOR[l.id] }} title={l.name}>
-                  {l.id <= me.highestLevel ? l.id : '🔒'}
+                <span key={l.id} className={l.id <= openTo ? 'pip on' : 'pip'} style={{ '--c': COLOR[l.id] }} title={l.name}>
+                  {l.id <= openTo ? l.id : '🔒'}
                 </span>
               ))}
             </div>
             <p className="goal-text">
-              {nextLocked ? <>Next: clear <b>{levels[me.highestLevel - 1].name}</b> to open <b>{nextLocked.name}</b>.</> : <>All 5 levels are open. Go for the top score!</>}
+              {guest
+                ? <>You are playing as a <b>guest</b>: levels 1 and 2 are free. Log in to save your score and open <b>{nextLocked.name}</b>.</>
+                : nextLocked
+                  ? <>Next: clear <b>{levels[openTo - 1].name}</b> to open <b>{nextLocked.name}</b>.</>
+                  : <>All 5 levels are open. Go for the top score!</>}
             </p>
-            <div className="stat-row"><span className="muted">Best score</span><b className="num"><CountUp value={me.bestScore} /></b></div>
+            {guest
+              ? <button className="btn primary wide" onClick={onLogin}>Log in to play levels 3-5</button>
+              : <div className="stat-row"><span className="muted">Best score</span><b className="num"><CountUp value={me.bestScore} /></b></div>}
             <button className="btn ghost wide" onClick={onLeaderboard}>🏆 Open leaderboard</button>
           </section>
         </aside>

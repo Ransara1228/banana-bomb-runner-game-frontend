@@ -18,6 +18,7 @@ React 18 + Vite web game for CIS046-3 Software For Enterprise. It talks to the S
 4. Sign up, then log in with your email and password. A 6-digit code comes to your email
    (it works for 5 minutes); type it on the next screen. This needs backend 2.0.0 or later
    with the email settings filled in.
+   Or press **Play as guest** to play levels 1 and 2 without an account (needs backend 2.1.0 or later).
 
 If the backend runs on another port (for example `SERVER_PORT=8078`), change the proxy in `vite.config.js`
 to the same port.
@@ -30,6 +31,17 @@ to the same port.
   Right in time = bonus (200 × level + 20 × seconds left) and the **server** unlocks the next level.
 - Wrong or time up = -1 heart and a new puzzle. 0 hearts = the level starts again.
 - P or Esc = pause. The game pauses when you switch tab.
+
+## Guest and logged-in player (authorization)
+
+| | Guest (Play as guest) | Logged-in player |
+|---|---|---|
+| Levels | 1 and 2 | 1 and 2, plus every level unlocked at the gate |
+| Score and progress | not saved | saved, on the leaderboard |
+| Levels 3-5 | locked: "Log in to play" | open after clearing the level before |
+
+`FREE_LEVELS = 2` is in `src/levels.js`. The map only shows the rule: the **backend** checks it on every
+puzzle (`AccessPolicy`), so a guest who calls `/api/puzzle?level=3` gets 401 even if the React code is changed.
 
 ## Parts
 
@@ -47,7 +59,7 @@ to the same port.
 | Mystery boxes, sparkles, "+10" texts (canvas) | `src/screens/Game.jsx` (`spawnBox`, `drawMystery`, `burst`) |
 | Leaderboard: podium, party hat for #1, confetti | `src/screens/Leaderboard.jsx`, `src/components/PartyHat.jsx` |
 | Moving background, count-up numbers | `src/components/BgFx.jsx`, `src/components/CountUp.jsx` |
-| Level colours and text | `src/levels.js` |
+| Level colours and text, free levels for guests | `src/levels.js` |
 | Shared parts | `src/components/` (AppHeader, LeaderboardTable, AuthHero, Icon) |
 | Look (tokens from the Figma style guide) | `src/index.css` — Fredoka + Inter (Google Fonts), colours `#0E1F17`, `#15301F`, `#FFD23F`, `#FF5A4E` |
 
