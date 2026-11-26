@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { api } from '../api';
 import { sound } from '../sfx';
-import { TITLE } from '../levels';
+import { GUEST, TITLE } from '../levels';
 import AppHeader from '../components/AppHeader';
 import Avatar from '../components/Avatar';
 import BgFx from '../components/BgFx';
@@ -40,7 +40,8 @@ function Fireworks() {
   );
 }
 
-export default function Leaderboard({ onBack, onPlay }) {
+// guest = not logged in: no player card, a log in button instead.
+export default function Leaderboard({ guest, onBack, onPlay, onLogin }) {
   const [rows, setRows] = useState(null);
   const [me, setMe] = useState(null);
   const [error, setError] = useState('');
@@ -48,7 +49,7 @@ export default function Leaderboard({ onBack, onPlay }) {
 
   useEffect(() => {
     api.leaderboard().then(setRows).catch((e) => setError(e.message));
-    api.progress().then(setMe).catch(() => {});
+    if (!guest) api.progress().then(setMe).catch(() => {});   // a guest has no progress on the server
   }, []);
 
   // A small party for the player in 1st place: confetti from their spot on the podium.
@@ -74,7 +75,7 @@ export default function Leaderboard({ onBack, onPlay }) {
   return (
     <div className="page board-page">
       <BgFx />
-      <AppHeader me={me}><button className="btn ghost" onClick={onBack}>← Level map</button></AppHeader>
+      <AppHeader me={me || (guest ? GUEST : null)}><button className="btn ghost" onClick={onBack}>← Level map</button></AppHeader>
       <main className="board-grid">
         <section className="panel me-card player-card pop">
           <span className="card-shine" aria-hidden="true" />
@@ -100,6 +101,14 @@ export default function Leaderboard({ onBack, onPlay }) {
                 ) : <span>Finish a level to get on the board.</span>}
               </div>
               <button className="btn primary big glow" onClick={() => onPlay(me.highestLevel)}>▶ Play level {me.highestLevel}</button>
+            </>
+          ) : guest ? (
+            <>
+              <span className="label">PLAYER CARD</span>
+              <span className="me-avatar"><Avatar name={GUEST.username} size={104} /></span>
+              <h2>{GUEST.username}</h2>
+              <p className="muted">Guests can play levels 1 and 2, but their scores are not saved.</p>
+              <button className="btn primary big glow" onClick={onLogin}>Log in to join the board</button>
             </>
           ) : <p className="muted">Loading...</p>}
         </section>

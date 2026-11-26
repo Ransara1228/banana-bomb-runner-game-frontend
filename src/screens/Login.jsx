@@ -21,7 +21,7 @@ function strength(pw) {
   return { level: 3, text: 'Strong' };
 }
 
-export default function Login({ onCodeSent }) {
+export default function Login({ onCodeSent, onGuest }) {
   const [mode, setMode] = useState('login');   // 'login' or 'register'
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -139,6 +139,7 @@ export default function Login({ onCodeSent }) {
           {busy ? 'Please wait…' : register ? 'Create my runner' : '▶ Start running'}
         </button>
         {msg && <p className="msg" role="status">{msg}</p>}
+        <button type="button" className="btn ghost wide" onClick={onGuest}>Play as guest (levels 1-2)</button>
 
         <p className="note"><Icon name="shield" size={18} /> Safe 2-step login: your password, then a one-time code in your email.</p>
       </form>
