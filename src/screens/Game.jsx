@@ -3,7 +3,7 @@ import { api } from '../api';
 import { bus } from '../events';
 import { sound } from '../sfx';
 import { onTabHidden, toggleFullscreen } from '../browser';
-import { COLOR, MYSTERY_BONUS, bombRows, mysteryBoxes } from '../levels';
+import { COLOR, GUEST, MYSTERY_BONUS, bombRows, mysteryBoxes } from '../levels';
 import { drawFinishGate, drawScenery, makeScenery, updateScenery } from '../scenery';
 import { H, STRIPE, W, laneX, loadImg, ready, sAt, yAt } from '../track';
 import Avatar from '../components/Avatar';
@@ -22,7 +22,8 @@ const IMG = {
 };
 const clock = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
 
-export default function Game({ levelNo, onPlay, onExit, onLeaderboard }) {
+// guest = playing without an account: the score is not saved and levels 3-5 need a login.
+export default function Game({ guest, levelNo, onPlay, onExit, onLeaderboard, onLogin }) {
   const canvasRef = useRef(null);
   const game = useRef(null);                      // the running game (shared with the buttons)
   const [levels, setLevels] = useState(null);
@@ -41,7 +42,7 @@ export default function Game({ levelNo, onPlay, onExit, onLeaderboard }) {
 
   // 1. level rules come from the backend as JSON (interoperability)
   useEffect(() => {
-    Promise.all([api.levels(), api.progress()])
+    Promise.all([api.levels(), guest ? GUEST : api.progress()])   // a guest has no progress on the server
       .then(([l, p]) => { setLevels(l); setMe(p); })
       .catch((e) => setError(e.message));
   }, [levelNo]);
@@ -104,9 +105,9 @@ export default function Game({ levelNo, onPlay, onExit, onLeaderboard }) {
         s.phase = 'complete';
         const total = s.score + r.bonus;
         setResult({ runScore: s.score, bonus: r.bonus, total, highestLevel: r.highestLevel, hearts: s.hearts,
-                    bananas: s.bananas, boxes: s.boxes, time: s.runTime, newBest: total > (me0?.bestScore ?? 0) });
+                    bananas: s.bananas, boxes: s.boxes, time: s.runTime, newBest: !guest && total > (me0?.bestScore ?? 0) });
         setPhase('complete'); sync();
-        api.saveScore(level.id, total).catch(() => {});
+        if (!guest) api.saveScore(level.id, total).catch(() => {});   // a guest's score is not saved
       }),
       bus.on('levelFailed', () => {
         s.phase = 'failed'; setPhase('failed'); sync();
@@ -383,7 +384,9 @@ export default function Game({ levelNo, onPlay, onExit, onLeaderboard }) {
                 <div><span>Mystery boxes ({hud.boxes} × {MYSTERY_BONUS})</span><b>{hud.boxes * MYSTERY_BONUS}</b></div>
                 <div><span>Time</span><b>{clock(hud.time)}</b></div>
               </div>
-              <p className="muted small">The level starts again with 3 hearts. Only finished levels go on the leaderboard.</p>
+              <p className="muted small">
+                The level starts again with 3 hearts. {guest ? 'Guest scores are not saved. Log in to get on the leaderboard.' : 'Only finished levels go on the leaderboard.'}
+              </p>
               <div className="row">
                 <button className="btn primary big grow glow" onClick={() => onPlay(level.id)}>↻ Restart level {level.id}</button>
                 <button className="btn ghost big" onClick={onExit}>Level map</button>
@@ -430,12 +433,23 @@ export default function Game({ levelNo, onPlay, onExit, onLeaderboard }) {
                 </div>
               </div>
             )}
+            {guest && next && result.highestLevel <= level.id && (
+              <div className="next-card" style={{ '--n': COLOR[next.id] }}>
+                <span className="next-num">🔒</span>
+                <div>
+                  <b>Log in to play {next.name}</b>
+                  <p className="muted small">Guests can play levels 1 and 2, but the score is not saved. Log in to save it, get on the leaderboard and open levels 3-5.</p>
+                </div>
+              </div>
+            )}
             <div className="row">
               <button className="btn ghost big" onClick={onExit}>Level map</button>
               <button className="btn ghost big" onClick={onLeaderboard}>Leaderboard</button>
               {next && result.highestLevel > level.id
                 ? <button className="btn primary big grow glow" onClick={() => onPlay(next.id)}>Next level →</button>
-                : <button className="btn primary big grow" onClick={() => onPlay(level.id)}>Play again</button>}
+                : guest && next
+                  ? <button className="btn primary big grow glow" onClick={onLogin}>Log in to play level {next.id}</button>
+                  : <button className="btn primary big grow" onClick={() => onPlay(level.id)}>Play again</button>}
             </div>
           </section>
         </div>
