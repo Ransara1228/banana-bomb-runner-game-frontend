@@ -15,3 +15,11 @@ export const mysteryBoxes = (level) => Math.max(1, Math.round(level.distance / 2
 
 // Fun player titles on the leaderboard, by the highest level a player has opened.
 export const TITLE = { 1: 'Banana Rookie', 2: 'River Runner', 3: 'Temple Explorer', 4: 'Lava Dodger', 5: 'Bomb Factory Boss' };
+
+// Authorization: levels 1 and 2 are free, so a guest (not logged in) can play them.
+// The backend has the same rule (AccessPolicy.FREE_LEVELS) and checks it on every puzzle.
+export const FREE_LEVELS = 2;
+// The levels a player can open: the free ones, plus the ones they unlocked at the gate.
+export const openUpTo = (highestLevel) => Math.max(highestLevel, FREE_LEVELS);
+// A guest has no account on the server, so nothing is saved for them.
+export const GUEST = { username: 'Guest', highestLevel: 1, bestScore: 0, guest: true };

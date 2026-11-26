@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { COLOR } from '../levels';
+import { COLOR, openUpTo } from '../levels';
 import Avatar from './Avatar';
 
 // The level map, drawn like a game world map (SVG, 1600 x 900 units).
@@ -36,6 +36,8 @@ function Cloud({ y, s, cls }) {
 
 export default function WorldMap({ levels, highest, selected, me, onSelect, onPlay }) {
   const [nudge, setNudge] = useState(null);    // a locked level the player tried to open
+  const openTo = openUpTo(highest);             // levels 1-2 are free, the rest open at the gate
+  const guest = !!me?.guest;                    // a guest must log in for levels 3-5
   const box = useRef(null);
   const [size, setSize] = useState(null);       // the map's size on screen, to put the buttons on the picture
 
@@ -56,7 +58,7 @@ export default function WorldMap({ levels, highest, selected, me, onSelect, onPl
   }
 
   function click(l) {
-    if (l.id > highest) {
+    if (l.id > openTo) {
       setNudge(l.id);
       setTimeout(() => setNudge((n) => (n === l.id ? null : n)), 1600);
       return;
@@ -143,7 +145,7 @@ export default function WorldMap({ levels, highest, selected, me, onSelect, onPl
 
         {/* the road between the levels: bright when open, dark when locked */}
         {P.slice(0, -1).map((a, i) => {
-          const open = i + 2 <= highest;
+          const open = i + 2 <= openTo;
           const d = road(a, P[i + 1]);
           return (
             <g key={i}>
@@ -163,7 +165,7 @@ export default function WorldMap({ levels, highest, selected, me, onSelect, onPl
         </g>
 
         {/* fog over the places that are still locked */}
-        {levels.filter((l) => l.id > highest).map((l) => (
+        {levels.filter((l) => l.id > openTo).map((l) => (
           <g key={l.id} className="fog">
             <ellipse cx={P[l.id - 1][0]} cy={P[l.id - 1][1] - 20} rx="210" ry="140" fill="#DCE8E0" opacity=".3" filter="url(#wm-blur)" />
             <ellipse cx={P[l.id - 1][0] + 60} cy={P[l.id - 1][1] - 70} rx="150" ry="90" fill="#DCE8E0" opacity=".22" filter="url(#wm-blur)" />
@@ -180,19 +182,19 @@ export default function WorldMap({ levels, highest, selected, me, onSelect, onPl
       <span className="world-hint">← → choose · Enter play · click twice to play</span>
 
       {levels.map((l, i) => {
-        const locked = l.id > highest;
+        const locked = l.id > openTo;
         const current = l.id === highest;
         const cls = ['node', locked ? 'locked' : '', l.id === selected ? 'sel' : '', current ? 'current' : '', nudge === l.id ? 'nudge' : ''].join(' ');
         return (
           <button key={l.id} className={cls} aria-disabled={locked} onClick={() => click(l)}
-                  aria-label={`Level ${l.id}, ${l.name}${locked ? ', locked' : ''}`}
+                  aria-label={`Level ${l.id}, ${l.name}${locked ? (guest ? ', log in to play' : ', locked') : ''}`}
                   style={{ ...at(P[i]), '--c': COLOR[l.id] }}>
             <span className="node-circle">{locked ? '🔒' : l.id}</span>
             {current && <span className="badge">PLAY NOW</span>}
-            {!locked && !current && <span className="done">✓ cleared</span>}
+            {!locked && l.id < highest && <span className="done">✓ cleared</span>}
             <span className="node-name">{l.name}</span>
             <span className="node-sub">{l.speed}× · {l.puzzleTime}s puzzle</span>
-            {nudge === l.id && <span className="lock-tip">🔒 Clear {levels[l.id - 2].name} first</span>}
+            {nudge === l.id && <span className="lock-tip">{guest ? '🔒 Log in to play' : `🔒 Clear ${levels[l.id - 2].name} first`}</span>}
           </button>
         );
       })}
